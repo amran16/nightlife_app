@@ -1,0 +1,34 @@
+<% include partials/header %>
+
+  <div class="container">
+    <div class="row">
+      <h2 style='text-align: center;'>Sign Up </h2>
+       <div style='width: 30%; margin:25px auto'>
+
+         <form action="/register" method="POST">
+
+           <div class="form-group">
+             <input class='form-control' type="text" name="username" placeholder="Username">
+           </div>
+
+           <div class="form-group">
+             <input class='form-control' type="password" name="password" placeholder="Password">
+           </div>
+
+            <div class="form-group">
+              <button type="submit" class='btn btn-lg btn-primary btn-block' name="button">Sign Up</button>
+            </div>
+
+         </form>
+
+         <div class="form-group">
+           <a href="/auth" class="btn btn-lg btn-primary btn-block"><i class="fa fa-github-alt" aria-hidden="true"></i> Sign Up with github</a>
+         </div>
+
+       </div>
+
+    </div>
+
+  </div>
+
+<% include partials/footer %>

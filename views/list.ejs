@@ -1,0 +1,35 @@
+
+<% include partials/header %>
+<link rel="stylesheet" href="/stylesheets/list.css">
+
+  <div style='text-align: center;'>
+    <% if(place){ %>
+      <h1 class='cityList hidden-xs'>Bars in <%= place.charAt(0).toUpperCase() + place.slice(1) %></h1>
+    <% }  %>
+  </div>
+
+      <% for(var i = 0; i < 10; i++){ %>
+      <div class="container">
+        <div class="flex-container">
+          <div class="flex-item">
+
+            <h1>
+              <a href=<%= data.businesses[i].url %>><%= data.businesses[i].name %></a>
+            </h1>
+            <img src=<%= data.businesses[i].image_url %> alt=<%data.businesses[i].name %>>
+            <h5><%= data.businesses[i].location.address %></h5>
+            <h4><%= data.businesses[i].phone %></h4>
+            <p> "<%= data.businesses[i].snippet_text %>"</p>
+            <button class="attendance" type="button" name="button">Attending?</button>
+            <button class="userAttendance" type="button" name="button">Attending</button>
+
+          </div>
+        </div>
+      </div>
+
+      <%} %>
+
+
+
+
+<% include partials/footer %>

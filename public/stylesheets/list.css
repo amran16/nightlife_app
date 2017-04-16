@@ -1,0 +1,30 @@
+ .flex-container {
+  padding: 0;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.flex-item {
+  background:tomato;
+  padding: 20px;
+  width: 300px;
+  margin: 5px 10px;
+  line-height: 20px;
+  font-size: 0.9em;
+  text-align: center;
+  border: 1px solid rgba(20,20,20,0.75);
+  border-radius: 10px;
+}
+
+
+
+    .attendance {
+			background: gold;
+		}
+		.userAttendance {
+			background: green;
+		}

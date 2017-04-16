@@ -1,0 +1,24 @@
+
+<% include partials/header %>
+
+<div class="container text-center ">
+
+<h2>Welcome to Nightlife Coordination App of Free Code Camp</h2>
+
+<p> Please <a href='/login'>Login </a> or <a href='/register'>sign up</a> </p>
+
+<div style='width: 30%; margin:45px auto'>
+<h3>Create Your Search Below</h3>
+<form action="/resturants" method="post">
+  <div class="form-group">
+    <input class='form-control' type="text" name="location" placeholder="Type your location here">
+  </div>
+  <div class="form-group">
+     <button class='btn btn btn-primary btn-block' name="button">Submit!</button>
+  </div>
+</form>
+</div>
+</div>
+
+
+<% include partials/footer %>
