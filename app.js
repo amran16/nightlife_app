@@ -98,22 +98,22 @@ passport.use(new GitHubStrategy({
 //============
 
 app.get('/', function(req, res){
-  res.redirect('/resturants');
+  res.redirect('/bars');
 });
 
-app.get('/resturants', function(req, res){
+app.get('/bars', function(req, res){
   res.render('landing');
 });
 
-app.post('/resturants', function(req, res){
+app.post('/bars', function(req, res){
     var location = req.body.location;
         location = req.sanitize(location);
         res.cookie('location', location);
-    res.redirect('/resturants/' + location);
+    res.redirect('/bars/' + location);
 })
 
 
-app.get('/resturants/:place', function(req, res){
+app.get('/bars/:place', function(req, res){
 
    var place = req.params.place;
 
@@ -129,28 +129,13 @@ app.get('/resturants/:place', function(req, res){
           if(err){
             console.log(err);
           }else{
-            if(bars.length !== 0){
-              bars.forEach(function(bar){
-                data.forEach(function(business){
-                  if(!business.whosGoing){
-                    business.whosGoing = [];
-                  }
-                  if(bar.yelpID === business.id){
-                    business.whosGoing = bar.going;
-                  }
-                });
-              });
-            }else{
-              data.businesses.forEach(function(business){
-              business.whosGoing = [];
-            });
-           }
+              res.render('list', {data: data, place: place, bars: bars});
           }
-          res.render('list', {place: place, data: data});
+
         });
 
         //console.log(data);
-        //res.send(data);
+        //res.send(data.businesses[0]);
 
         //res.send(data.businesses);
 
