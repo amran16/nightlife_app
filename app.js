@@ -136,22 +136,14 @@ app.get('/bars/:place', function(req, res){
 
         //console.log(data);
         //res.send(data.businesses[0]);
-
         //res.send(data.businesses);
 
-        // data.businesses.forEach(function(business){
-        //   res.render('list', {place: place, data: data})
-
-          //res.send({bars: business})
-          //business.snippet_text}
-          //business.phone
-          //business.name
-          //business.location.display_address[0]
-          //business.location.address
-          //business.mobile_url
-
-        //});
-
+          // businesses.snippet_text
+          // businesses.phone
+          // businesses.name
+          // businesses.location.display_address[0]
+          // businesses.location.address
+          // businesses.mobile_url
     }
   });
  });
