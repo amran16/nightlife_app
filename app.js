@@ -203,8 +203,6 @@ app.get('/bars/:place', function(req, res){
  );
 
 
-
-
  ///LOGOUT Route
  app.get("/logout", function(req, res){
      req.logout();
