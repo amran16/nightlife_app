@@ -68,7 +68,7 @@ var yelp = new Yelp({
 
 //github login
 passport.use(new GitHubStrategy({
-  clientID: process.env.GITHUB_CLIENT,
+  clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_SECRET,
   callbackURL:  'https://yelpcampsite.herokuapp.com/auth/callback'
  },
