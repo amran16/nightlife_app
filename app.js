@@ -4,10 +4,10 @@ var express               = require("express"),
     passport              = require("passport"),
     bodyParser            = require("body-parser"),
     User                  = require("./models/user"),
-    Yelpinfo              = require("./models/yelp"),
+    YelpInfo              = require("./models/yelp"),
     Yelp                  = require("yelp"),
     LocalStrategy         = require("passport-local"),
-    GitHubStrategy        = require("passport-github2"),
+    GitHubStrategy        = require("passport-github"),
     googleStrategy        = require("passport-google-oauth"),
     passportLocalMongoose = require("passport-local-mongoose"),
     methodOverride        = require("method-override"),
@@ -70,7 +70,7 @@ var yelp = new Yelp({
 passport.use(new GitHubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_SECRET,
-  callbackURL:  'https://yelpcampsite.herokuapp.com/auth/callback'
+  callbackURL:  'http://localhost:7000/auth/callback'
  },
  function(accessToken, refreshToken, profile, done){
    User.findOne({ githubId: profile.username}, function(err, user){
@@ -125,14 +125,14 @@ app.get('/bars/:place', function(req, res){
         console.log('Error');
       }else{
 
-        Yelpinfo.find({}, function(err, bars){
-          if(err){
-            console.log(err);
-          }else{
-              res.render('list', {data: data, place: place, bars: bars});
-          }
-
-        });
+        // YelpInfo.find({}, function(err, bars){
+        //   if(err){
+        //     console.log(err);
+        //   }else{
+        //       res.render('list', {data: data, place: place, bars: bars});
+        //   }
+        //
+        // });
 
         //console.log(data);
         //res.send(data.businesses[0]);
@@ -144,9 +144,63 @@ app.get('/bars/:place', function(req, res){
           // businesses.location.display_address[0]
           // businesses.location.address
           // businesses.mobile_url
+          // businesses.id
+
+       YelpInfo.find({}, function(err, bars){
+        if(err){
+          console.log(err);
+        } else {
+          //console.log(bars);
+          if(bars.length !== 0){
+            bars.forEach(function(bar){
+              data.businesses.forEach(function(business){
+                if(!business.whosGoing){
+                  business.whosGoing = [];
+                }
+                if(bar.id === business.id){
+                  business.whosGoing = bar.people;
+                }
+              });
+            });
+          } else {
+            data.businesses.forEach(function(business){
+              business.whosGoing = [];
+            });
+          }
+        }
+        res.render('list', {data: data, place: place, bars: bars});
+
+      });
     }
   });
  });
+
+ app.post('/bars/:city/:barID', isLoggedIn, function(req, res){
+   console.log(req.params);  //{ city: 'San Francisco', barID: 'abv-san-francisco-2' }
+   YelpInfo.findOne({id: req.params.barID }, function(err, foundYelp){
+     if(foundYelp === null){
+        YelpInfo.create({
+          id: req.params.barID,
+          people: req.user._id
+        }, function(err, savedYelp){
+           if(err){
+             console.log(err);
+           }else{
+             res.redirect('/bars/' + req.params.city);
+           }
+        });
+     }else{
+       //console.log(foundYelp);
+       //console.log(req.user);
+       foundYelp.people.push(req.user._id);
+       foundYelp.save();
+       //console.log(foundYelp);
+       res.redirect('/bars/' + req.params.city);
+     }
+
+   });
+ });
+
 
 
  // Auth Routes
@@ -198,7 +252,7 @@ app.get('/bars/:place', function(req, res){
     passport.authenticate('github', { failureRedirect: '/auth/error'}),
     function(req, res){
       // Successful authentication, redirect home.
-     res.redirect('/secret');
+     res.redirect("/");
    }
  );
 

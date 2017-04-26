@@ -19,11 +19,14 @@
   border-radius: 10px;
 }
 
+.attendance {
+	background: gold;
+}
 
+.userAttendance {
+	background: green;
+}
 
-    .attendance {
-			background: gold;
-		}
-		.userAttendance {
-			background: green;
-		}
+.attendance, .userAttendance {
+  display:inline-block;
+}
