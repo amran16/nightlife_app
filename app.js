@@ -1,6 +1,7 @@
 require('dotenv').config()
 var express               = require("express"),
     mongoose              = require("mongoose"),
+    flash                 = require("connect-flash"),
     passport              = require("passport"),
     bodyParser            = require("body-parser"),
     User                  = require("./models/user"),
@@ -25,11 +26,12 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(methodOverride("_method")); //this is for delete
+app.use(flash());
 app.use(expressSanitizer());
 app.use(cookieParser());
 
-//login in
-app.use(expressSession({
+// PASSPORT CONFIGURATION
+app.use(require("express-session")({
    secret: "does not matter",
    resave: false,
    saveUninitialized: false
@@ -43,6 +45,8 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
+    //res.locals.error = req.flash("error");
+    //res.locals.success = req.flash("success");
     next();
 });
 
@@ -186,6 +190,7 @@ app.get('/bars/:place', function(req, res){
            if(err){
              console.log(err);
            }else{
+             //req.flash("error", "You need to be logged in to do that");
              res.redirect('/bars/' + req.params.city);
            }
         });
@@ -195,6 +200,7 @@ app.get('/bars/:place', function(req, res){
        foundYelp.people.push(req.user._id);
        foundYelp.save();
        //console.log(foundYelp);
+       req.flash("error", "You need to be logged in to do that");
        res.redirect('/bars/' + req.params.city);
      }
 
@@ -229,7 +235,9 @@ app.get('/bars/:place', function(req, res){
  // LOGIN ROUTES
  //render login form
  app.get("/login", function(req, res){
-    res.render("login");
+    //res.render("login");
+    res.render("login", {message: "ERROR, MESSED IT UP!!"});
+    //res.render("login", {message: req.flash("error")});
  });
 
  //login logic
@@ -252,7 +260,7 @@ app.get('/bars/:place', function(req, res){
     passport.authenticate('github', { failureRedirect: '/auth/error'}),
     function(req, res){
       // Successful authentication, redirect home.
-     res.redirect("/");
+    res.redirect('/');
    }
  );
 
@@ -264,11 +272,12 @@ app.get('/bars/:place', function(req, res){
  });
 
 
- //This is amiddleware to prevent going to secret without any logins
+ //This is amiddleware to prevent doing anything without any logins
  function isLoggedIn(req, res, next){
      if(req.isAuthenticated()){
          return next();
      }
+     req.flash("error", "You need to be logged in to do that");
      res.redirect("/login");
  }
 

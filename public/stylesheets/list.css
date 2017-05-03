@@ -20,13 +20,9 @@
 }
 
 .attendance {
-	background: gold;
+	background: #FFC125;
 }
 
 .userAttendance {
-	background: green;
-}
-
-.attendance, .userAttendance {
-  display:inline-block;
+	background: #698B22;
 }

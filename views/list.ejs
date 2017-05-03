@@ -19,14 +19,13 @@
             <h4><%= data.businesses[i].phone %></h4>
             <p> "<%= data.businesses[i].snippet_text %>"</p>
             <div class="form-group">
-              <button class='attendance'><%= data.businesses[i].whosGoing.length %> Attending</button>
+              <button class='attendance btn btn-lg btn-secondary btn-block'><%= data.businesses[i].whosGoing.length %> Attending</button>
             </div>
-
-              <% if(currentUser && data.businesses[i].whosGoing.indexOf(currentUser.id) === -1){ %>
+               <% if(currentUser && data.businesses[i].whosGoing.indexOf(currentUser.id) === -1){ %>
 
                 <form  method='post' action='/bars/<%= data.businesses[i].location.city %>/<%= data.businesses[i].id %>' >
                   <div class="form-group">
-                    <button class='userAttendance' type='submit'>Wanna Go? <i class=''></i></button>
+                    <button class='userAttendance btn btn-lg btn-secondary btn-block' type='submit'>Wanna Go? <i class=''></i></button>
                   </div>
                 </form>
                <%  } else if (currentUser){  %>
