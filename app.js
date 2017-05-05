@@ -155,24 +155,9 @@ app.get('/bars/:place', function(req, res){
           console.log(err);
         } else {
           //console.log(bars);
-          if(bars.length !== 0){
-            bars.forEach(function(bar){
-              data.businesses.forEach(function(business){
-                if(!business.whosGoing){
-                  business.whosGoing = [];
-                }
-                if(bar.id === business.id){
-                  business.whosGoing = bar.people;
-                }
-              });
-            });
-          } else {
-            data.businesses.forEach(function(business){
-              business.whosGoing = [];
-            });
-          }
+             res.render('list', {data: data, place: place, bars: bars});
         }
-        res.render('list', {data: data, place: place, bars: bars});
+
 
       });
     }
