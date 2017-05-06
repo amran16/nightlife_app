@@ -19,20 +19,16 @@
             <h4><%= data.businesses[i].phone %></h4>
             <p> "<%= data.businesses[i].snippet_text %>"</p>
             <div class="form-group">
-              <button class='attendance btn btn-lg btn-secondary btn-block'><%= data.businesses[i].whosGoing.length %> Attending</button>
+              <butto class='attendance btn btn-lg btn-secondary btn-block'> Attending </button>
             </div>
-               <% if(currentUser && data.businesses[i].whosGoing.indexOf(currentUser.id) === -1){ %>
+
 
                 <form  method='post' action='/bars/<%= data.businesses[i].location.city %>/<%= data.businesses[i].id %>' >
                   <div class="form-group">
-                    <button class='userAttendance btn btn-lg btn-secondary btn-block' type='submit'>Wanna Go? <i class=''></i></button>
+                    <a class='userAttendance btn btn-lg btn-secondary btn-block' type='submit'>Wanna Go?</a>
                   </div>
                 </form>
-               <%  } else if (currentUser){  %>
-                <form  method='post' action='/bars/<%= data.businesses[i].location.city %>/<%= data.businesses[i].id %>?_method=DELETE' >
-                  <button class='btn btn-danger'type='submit'>Cancel <span class='glyphicon glyphicon-remove'></span></button>
-                </form>
-              <%  } %>
+
 
             <!-- <button class="attendance" type="submit" name="button">Attending?</button>
             <button class="userAttendance" type="submit" name="button">Attending</button> -->

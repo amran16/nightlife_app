@@ -101,23 +101,23 @@ passport.use(new GitHubStrategy({
 // ROUTES
 //============
 
-app.get('/', function(req, res){
-  res.redirect('/bars');
-});
+// app.get('/', function(req, res){
+//   res.redirect('/bars');
+// });
 
-app.get('/bars', function(req, res){
+app.get('/', function(req, res){
   res.render('landing');
 });
 
-app.post('/bars', function(req, res){
+app.post('/', function(req, res){
     var location = req.body.location;
         location = req.sanitize(location);
         res.cookie('location', location);
-    res.redirect('/bars/' + location);
+    res.redirect('/' + location);
 })
 
 
-app.get('/bars/:place', function(req, res){
+app.get('/:place', function(req, res){
 
    var place = req.params.place;
 
@@ -129,14 +129,13 @@ app.get('/bars/:place', function(req, res){
         console.log('Error');
       }else{
 
-        // YelpInfo.find({}, function(err, bars){
-        //   if(err){
-        //     console.log(err);
-        //   }else{
-        //       res.render('list', {data: data, place: place, bars: bars});
-        //   }
-        //
-        // });
+        YelpInfo.find({}, function(err, bars){
+          if(err){
+            console.log(err);
+          }else{
+              res.render('list', {data: data, place: place, bars: bars});
+          }
+        });
 
         //console.log(data);
         //res.send(data.businesses[0]);
@@ -150,21 +149,19 @@ app.get('/bars/:place', function(req, res){
           // businesses.mobile_url
           // businesses.id
 
-       YelpInfo.find({}, function(err, bars){
-        if(err){
-          console.log(err);
-        } else {
-          //console.log(bars);
-             res.render('list', {data: data, place: place, bars: bars});
-        }
-
-
-      });
+      //  YelpInfo.find({}, function(err, bars){
+      //   if(err){
+      //     console.log(err);
+      //   } else {
+      //     //console.log(bars);
+      //        res.render('list', {data: data, place: place, bars: bars});
+      //   }
+      // });
     }
   });
  });
 
- app.post('/bars/:city/:barID', isLoggedIn, function(req, res){
+ app.post('/:city/:barID', isLoggedIn, function(req, res){
    console.log(req.params);  //{ city: 'San Francisco', barID: 'abv-san-francisco-2' }
    YelpInfo.findOne({id: req.params.barID }, function(err, foundYelp){
      if(foundYelp === null){
@@ -176,7 +173,7 @@ app.get('/bars/:place', function(req, res){
              console.log(err);
            }else{
              //req.flash("error", "You need to be logged in to do that");
-             res.redirect('/bars/' + req.params.city);
+             res.redirect('/' + req.params.city);
            }
         });
      }else{
@@ -186,7 +183,7 @@ app.get('/bars/:place', function(req, res){
        foundYelp.save();
        //console.log(foundYelp);
        req.flash("error", "You need to be logged in to do that");
-       res.redirect('/bars/' + req.params.city);
+       res.redirect('/' + req.params.city);
      }
 
    });
