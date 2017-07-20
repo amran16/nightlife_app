@@ -78,7 +78,8 @@ var yelp = new Yelp({
 passport.use(new GitHubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_SECRET,
-  callbackURL:  'https://nightlifeproject.herokuapp.com/auth/callback'
+  callbackURL:  'https://nightlifeproject.herokuapp.com/auth/github/callback'
+  
  },
  function(accessToken, refreshToken, profile, done){
    User.findOne({ githubId: profile.username}, function(err, user){
