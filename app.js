@@ -24,7 +24,7 @@ var authentication = require('./routes/authentication')
 
 
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost/nightlife");
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/nightlife");
 
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
@@ -227,9 +227,9 @@ app.get('/bars/:place', function(req, res){
   });
 });
 
- app.post('/bars/:city/:barId', isLoggedIn, function(req, res){
+ app.post('/bars/:place/:barId', isLoggedIn, function(req, res){
    //console.log(req.params);  //{ city: 'San Francisco', barId: 'abv-san-francisco-2' }
-   console.log(req.params.city)
+   console.log(req.params.place)
    YelpInfo.findOne({YelpId: req.params.barId }, function(err, foundYelp){
      if(foundYelp === null){
         YelpInfo.create({
@@ -240,7 +240,7 @@ app.get('/bars/:place', function(req, res){
              console.log(err);
            }else{
              //req.flash("error", "You need to be logged in to do that");
-             res.redirect('/bars/' + req.params.city);
+             res.redirect('/bars/' + req.params.place);
            }
         })
      }else{
@@ -250,22 +250,21 @@ app.get('/bars/:place', function(req, res){
        foundYelp.save();
        //console.log(foundYelp);
        //req.flash("error", "You need to be logged in to do that");
-       res.redirect('/bars/' + req.params.city);
+       res.redirect('/bars/' + req.params.place);
      }
 
    });
  });
 
- app.delete('/bars/:city/:barId', isLoggedIn, function(req, res, next){
+ app.delete('/bars/:place/:barId', isLoggedIn, function(req, res, next){
     YelpInfo.findOne({YelpId: req.params.barId}, function(err, foundYelp){
       if(err) return next (err);
       if(!err){
-        //console.log(foundYelp.going); //gave me undefined
         console.log(req.user._id);
         foundYelp.people.splice((foundYelp.people.indexOf(req.user._id)), 1);
         foundYelp.save();
         console.log(foundYelp);
-        res.redirect('/bars/' + req.params.city);
+        res.redirect('/bars/' + req.params.place);
       }
     });
  });
@@ -344,9 +343,6 @@ app.get('/bars/:place', function(req, res){
      //req.flash("error", "You need to be logged in to do that");
      res.redirect("/login");
  }
-
-
-
 
 
 app.listen(7000, function(){
