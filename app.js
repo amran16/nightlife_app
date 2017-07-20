@@ -345,6 +345,6 @@ app.get('/bars/:place', function(req, res){
  }
 
 
-app.listen(7000, function(){
+app.listen(process.env.PORT || 7000, function(){
    console.log('The Night-Life Server is running on 7000');
 });
