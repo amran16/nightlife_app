@@ -19,6 +19,10 @@ var express               = require("express"),
 
 var app = express();
 
+//Routes Imports
+var authentication = require('./routes/authentication')
+
+
 mongoose.Promise = global.Promise;
 mongoose.connect("mongodb://localhost/nightlife");
 
@@ -96,162 +100,240 @@ passport.use(new GitHubStrategy({
 ));
 
 
+app.use(authentication);
+
 
 //============
 // ROUTES
 //============
 
-// app.get('/', function(req, res){
-//   res.redirect('/bars');
-// });
-
 app.get('/', function(req, res){
+  res.redirect('/bars');
+});
+
+app.get('/bars', function(req, res){
   res.render('landing');
 });
 
-app.post('/', function(req, res){
+app.post('/bars', function(req, res){
     var location = req.body.location;
         location = req.sanitize(location);
         res.cookie('location', location);
-    res.redirect('/' + location);
+    res.redirect('/bars/' + location);
 })
 
 
-app.get('/:place', function(req, res){
+// app.get('/bars/:place', function(req, res){
+//
+//    var place = req.params.place;
+//
+//     yelp.search({ term: 'bar', location: place })
+//        .then(function(data){
+//          //console.log(data);
+//
+//          YelpInfo.find({}, function(err, bars){
+//            if(err){
+//              console.log(err)
+//            }
+//            else {
+//              //res.send(bars)  //[{"_id": "59156782a945605c79123943",
+//                             //    "__v": 0,
+//                             //"people": [
+//                              //"5914c753a0c3a95546c8fd09"]
+//                               //}, i have got 9 of those
+//                               //]
+//              //res.render('list', {data: data, place: place, bars: bars});
+//              if(bars.length !== 0){
+//                bars.forEach(function(bar){
+//                  data.businesses.forEach(function(business){
+//                    if(!business.going){
+//                      business.going = [];
+//                    }else if(bars.YelpId === business.id){
+//                      business.going = bars.people;
+//                    }
+//                  })
+//                })
+//              }
+//              else {
+//                data.businesses.forEach(function(business){
+//               business.going = [];
+//               });
+//              }
+//            }
+//            res.render('list', {data: data, place: place, bars: bars});
+//          });
+//
+//        })
+//        .catch(function(err){
+//          console.error(err);
+//          res.status(404).send('This place does not exist');
+//        });
+//
+//
+//         //console.log(data);
+//           //res.send(data);
+//         //res.send(data.businesses[0]);
+//         //res.send(data.businesses);
+//
+//           // businesses.snippet_text
+//           // businesses.phone
+//           // businesses.name
+//           // businesses.location.display_address[0]
+//           // businesses.location.address
+//           // businesses.mobile_url
+//           // businesses.id
+//
+//         //res.render('list', {data: data, place: place, bars: bars});
+//
+//         //console.log(req.params);
+//  });
 
-   var place = req.params.place;
+app.get('/bars/:place', function(req, res){
 
-    yelp.search({
-      term: 'bar',
-      location: place
-    }, function(err, data){
-      if(err){
-        console.log('Error');
-      }else{
-
-        YelpInfo.find({}, function(err, bars){
-          if(err){
-            console.log(err);
-          }else{
-              res.render('list', {data: data, place: place, bars: bars});
+  var place = req.params.place;
+  yelp.search({
+    term: 'bar',
+    location: place
+  }, function(err, data){
+    //console.log(data)
+    if(err){
+      console.log(err);
+    } else {
+    YelpInfo.find({}, function(err, bars){
+        if(err){
+          console.log(err);
+        } else {
+          var business = data.businesses
+          if(bars.length !== 0){
+              for(var i = 0; i < bars.length; i++){
+                for(var j = 0; j < business.length; j++){
+                  if(!business[j].going){
+                    business[j].going = [];
+                  } else if(bars[i].YelpId === business[j].id){
+                    business[j].going = bars[i].people;
+                  }
+                }
+              }
+          } else {
+            for(var k = 0; k < business.length; k++){
+              business[k].going = [];
+            }
           }
-        });
-
-        //console.log(data);
-        //res.send(data.businesses[0]);
-        //res.send(data.businesses);
-
-          // businesses.snippet_text
-          // businesses.phone
-          // businesses.name
-          // businesses.location.display_address[0]
-          // businesses.location.address
-          // businesses.mobile_url
-          // businesses.id
-
-      //  YelpInfo.find({}, function(err, bars){
-      //   if(err){
-      //     console.log(err);
-      //   } else {
-      //     //console.log(bars);
-      //        res.render('list', {data: data, place: place, bars: bars});
-      //   }
-      // });
+        }
+        res.render('list', {data: data, place: place, bars: bars});
+        //res.send(data)
+      });
     }
   });
- });
+});
 
- app.post('/:city/:barID', isLoggedIn, function(req, res){
-   console.log(req.params);  //{ city: 'San Francisco', barID: 'abv-san-francisco-2' }
-   YelpInfo.findOne({id: req.params.barID }, function(err, foundYelp){
+ app.post('/bars/:city/:barId', isLoggedIn, function(req, res){
+   //console.log(req.params);  //{ city: 'San Francisco', barId: 'abv-san-francisco-2' }
+   console.log(req.params.city)
+   YelpInfo.findOne({YelpId: req.params.barId }, function(err, foundYelp){
      if(foundYelp === null){
         YelpInfo.create({
-          id: req.params.barID,
+          YelpId: req.params.barId,
           people: req.user._id
         }, function(err, savedYelp){
            if(err){
              console.log(err);
            }else{
              //req.flash("error", "You need to be logged in to do that");
-             res.redirect('/' + req.params.city);
+             res.redirect('/bars/' + req.params.city);
            }
-        });
+        })
      }else{
        //console.log(foundYelp);
        //console.log(req.user);
        foundYelp.people.push(req.user._id);
        foundYelp.save();
        //console.log(foundYelp);
-       req.flash("error", "You need to be logged in to do that");
-       res.redirect('/' + req.params.city);
+       //req.flash("error", "You need to be logged in to do that");
+       res.redirect('/bars/' + req.params.city);
      }
 
    });
  });
 
-
-
- // Auth Routes
-
- //show sign up form
- app.get("/register", function(req, res){
-    res.render("register");
- });
-
- //handling user sign up
- app.post("/register", function(req, res){
-
-     User.register(new User({username: req.body.username}), req.body.password, function(err, user){
-         if(err){
-             console.log(err);
-             return res.render("register");
-         }
-         passport.authenticate("local")(req, res, function(){
-            //res.send("you are in");
-            res.redirect("/");
-         });
-     });
+ app.delete('/bars/:city/:barId', isLoggedIn, function(req, res, next){
+    YelpInfo.findOne({YelpId: req.params.barId}, function(err, foundYelp){
+      if(err) return next (err);
+      if(!err){
+        //console.log(foundYelp.going); //gave me undefined
+        console.log(req.user._id);
+        foundYelp.people.splice((foundYelp.people.indexOf(req.user._id)), 1);
+        foundYelp.save();
+        console.log(foundYelp);
+        res.redirect('/bars/' + req.params.city);
+      }
+    });
  });
 
 
- // LOGIN ROUTES
- //render login form
- app.get("/login", function(req, res){
-    //res.render("login");
-    res.render("login", {message: "ERROR, MESSED IT UP!!"});
-    //res.render("login", {message: req.flash("error")});
- });
 
- //login logic
- app.post("/login", passport.authenticate("local",
-     {
-         successRedirect: "/",
-         failureRedirect: "/login"
-     }), function(req, res){
- });
-
-
- //GITHUB LOGIN
- app.get('/auth', passport.authenticate('github'));
-
- app.get('/auth/error', function(req, res){
-   res.redirect('/register');
- });
-
- app.get('/auth/callback',
-    passport.authenticate('github', { failureRedirect: '/auth/error'}),
-    function(req, res){
-      // Successful authentication, redirect home.
-    res.redirect('/');
-   }
- );
-
-
- ///LOGOUT Route
- app.get("/logout", function(req, res){
-     req.logout();
-     res.redirect("/");
- });
+ //
+ // // Auth Routes
+ //
+ // //show sign up form
+ // app.get("/register", function(req, res){
+ //    res.render("register");
+ // });
+ //
+ // //handling user sign up
+ // app.post("/register", function(req, res){
+ //
+ //     User.register(new User({username: req.body.username}), req.body.password, function(err, user){
+ //         if(err){
+ //             console.log(err);
+ //             return res.render("register");
+ //         }
+ //         passport.authenticate("local")(req, res, function(){
+ //            //res.send("you are in");
+ //            res.redirect("/");
+ //         });
+ //     });
+ // });
+ //
+ //
+ // // LOGIN ROUTES
+ // //render login form
+ // app.get("/login", function(req, res){
+ //   res.render("login");
+ //    //res.render("login", {message: "ERROR, MESSED IT UP!!"});
+ //    //res.render("login", {message: req.flash("error")});
+ // });
+ //
+ // //login logic
+ // app.post("/login", passport.authenticate("local",
+ //     {
+ //         successRedirect: "/",
+ //         failureRedirect: "/login"
+ //     }), function(req, res){
+ // });
+ //
+ //
+ // //GITHUB LOGIN
+ // app.get('/auth', passport.authenticate('github'));
+ //
+ // app.get('/auth/error', function(req, res){
+ //   res.redirect('/register');
+ // });
+ //
+ // app.get('/auth/callback',
+ //    passport.authenticate('github', { failureRedirect: '/auth/error'}),
+ //    function(req, res){
+ //      // Successful authentication, redirect home.
+ //    res.redirect('/');
+ //   }
+ // );
+ //
+ //
+ // ///LOGOUT Route
+ // app.get("/logout", function(req, res){
+ //     req.logout();
+ //     res.redirect("/");
+ // });
 
 
  //This is amiddleware to prevent doing anything without any logins
@@ -259,7 +341,7 @@ app.get('/:place', function(req, res){
      if(req.isAuthenticated()){
          return next();
      }
-     req.flash("error", "You need to be logged in to do that");
+     //req.flash("error", "You need to be logged in to do that");
      res.redirect("/login");
  }
 
