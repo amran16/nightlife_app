@@ -2,17 +2,15 @@
 var express               = require("express"),
     router                = express.Router(),
     mongoose              = require("mongoose"),
+    LocalStrategy         = require("passport-local"),
     flash                 = require("connect-flash"),
     passport              = require("passport"),
     User                  = require("../models/user"),
-    passportLocalMongoose = require("passport-local-mongoose");
-    // methodOverride        = require("method-override"),
-    // expressSession        = require("express-session"),
-    // cookieParser          = require("cookie-parser"),
-    // expressSanitizer      = require('express-sanitizer');
-
-
-
+    passportLocalMongoose = require("passport-local-mongoose"),
+    methodOverride        = require("method-override"),
+    expressSession        = require("express-session"),
+    cookieParser          = require("cookie-parser"),
+    expressSanitizer      = require('express-sanitizer');
 
 
  // Auth Routes

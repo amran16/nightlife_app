@@ -79,7 +79,7 @@ passport.use(new GitHubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_SECRET,
   callbackURL:  'https://nightlifeproject.herokuapp.com/auth/callback'
-  
+
  },
  function(accessToken, refreshToken, profile, done){
    User.findOne({ githubId: profile.username}, function(err, user){
@@ -229,9 +229,11 @@ app.get('/bars/:place', function(req, res){
 });
 
  app.post('/bars/:place/:barId', isLoggedIn, function(req, res){
-   //console.log(req.params);  //{ city: 'San Francisco', barId: 'abv-san-francisco-2' }
-   console.log(req.params.place)
+   //console.log(req.params);  //{ place: 'San Francisco', barId: 'abv-san-francisco-2' }
+   //console.log(req.params.place)
    YelpInfo.findOne({YelpId: req.params.barId }, function(err, foundYelp){
+     console.log(req.user)
+     //console.log(req)
      if(foundYelp === null){
         YelpInfo.create({
           YelpId: req.params.barId,
@@ -261,10 +263,10 @@ app.get('/bars/:place', function(req, res){
     YelpInfo.findOne({YelpId: req.params.barId}, function(err, foundYelp){
       if(err) return next (err);
       if(!err){
-        console.log(req.user._id);
+        //console.log(req.user._id);
         foundYelp.people.splice((foundYelp.people.indexOf(req.user._id)), 1);
         foundYelp.save();
-        console.log(foundYelp);
+        //console.log(foundYelp);
         res.redirect('/bars/' + req.params.place);
       }
     });

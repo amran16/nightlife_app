@@ -35,18 +35,7 @@
             <form method="post" action="/bars/<%= data.businesses[i].location.city %>/<%= data.businesses[i].id %>?_method=Delete" >
               <button class='btn btn-lg btn-secondary btn-block'type='submit'> Delete <span class='glyphicon glyphicon-remove'></span></button>
             </form>
-
           <% } %>
-
-          <!--  <div class="form-group">
-              <button class='attendance btn btn-lg btn-secondary btn-block'> Going Tonight</button>
-            </div>
-
-            <form class="" action="/bars/user/<%= data.businesses[i].location.place %>/<%= data.businesses[i].id %>" method="post">
-              <button class='userAttendance btn btn-lg btn-secondary btn-block'> Are You Going?</button>
-            </form>
-          -->
-
           </div>
       <%} %>
       </div>
