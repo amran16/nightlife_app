@@ -13,7 +13,7 @@
       <% for(var i = 0; i < 12; i++){ %>
           <div class="flex-item">
             <h3>
-              <a class="link" href=<%= business[i].url %>><%= business[i].name %></a>
+              <a class="link" target='_blank' href=<%= business[i].url %>><%= business[i].name %></a>
             </h3>
             <img src=<%= business[i].image_url %> alt=<% business[i].name %>>
             <h5>Rating: <%= business[i].rating %></h5>
