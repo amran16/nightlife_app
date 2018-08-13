@@ -32,7 +32,7 @@
           </div>
           <% } else if (currentUser){ %>
             <form method="post" action="/bars/<%= business[i].location.city %>/<%= business[i].id %>?_method=Delete" >
-              <button class='btn btn-lg btn-secondary btn-block'type='submit'> Delete <span class='glyphicon glyphicon-remove'></span></button>
+              <button class='btn btn-lg btn-danger btn-block'type='submit'> Delete <span class='glyphicon glyphicon-remove'></span></button>
             </form>
           <% } %>
           </div>

@@ -23,7 +23,7 @@ const bars           = require('./routes/venues');
 
 
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGOLAB_COBALT_URI || 'mongodb://localhost/nightlife', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/nightlife', {
   keepAlive: true
 });
 
@@ -82,7 +82,6 @@ passport.use(new GitHubStrategy({
 
 app.use(authentication);
 app.use(bars);
-
 
 //Server Setup
 app.listen(PORT, () => {
