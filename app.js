@@ -15,13 +15,15 @@ const express             = require('express'),
 
 const app = express();
 
+const PORT = process.env.PORT || 7000;
+
 //Routes Imports
 const authentication = require('./routes/authentication');
 const bars           = require('./routes/venues');
 
 
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/nightlife', {
+mongoose.connect(process.env.MONGOLAB_COBALT_URI || 'mongodb://localhost/nightlife', {
   keepAlive: true
 });
 
@@ -82,6 +84,8 @@ app.use(authentication);
 app.use(bars);
 
 
-app.listen(process.env.PORT || 7000, function(){
-   console.log('The Night-Life Server is running on 7000');
-});
+//Server Setup
+app.listen(PORT, () => {
+  console.log(`NightLife server starting on ${PORT}`);
+})
+
