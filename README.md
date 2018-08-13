@@ -2,7 +2,7 @@
 ### Full Stack app that let you search bars using Yelp's API.
 
 #### User Stories
-     =============
+     ------------------------------------------------------------------------
 
 #### [X] User Story: As an unauthenticated user, I can view all bars in my area.
 
