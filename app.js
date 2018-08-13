@@ -23,7 +23,7 @@ const bars           = require('./routes/venues');
 
 
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/nightlife', {
+mongoose.connect(process.env.MONGOLAB_CHARCOAL_URI || 'mongodb://localhost/nightlife', {
   keepAlive: true
 });
 
