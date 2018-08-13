@@ -4,35 +4,34 @@
   <div style='text-align: center;'>
 
     <% if(place){ %>
-      <h1 class='placeList hidden-xs'>Bars in <%= place.charAt(0).toUpperCase() + place.slice(1) %></h1>
-      <h3>Please login to make a reservation</h3>
+      <h3 class='placeList hidden-xs'>Bars in <%= place.charAt(0).toUpperCase() + place.slice(1) %></h3>
+      <h5>Please login to make a reservation</h5>
     <% }  %>
   </div>
   <div class="container">
     <div class="flex-container">
       <% for(var i = 0; i < 12; i++){ %>
           <div class="flex-item">
-            <h1>
-              <a href=<%= data.businesses[i].url %>><%= data.businesses[i].name %></a>
-            </h1>
-            <img src=<%= data.businesses[i].image_url %> alt=<%data.businesses[i].name %>>
-            <h5><%= data.businesses[i].location.address %></h5>
-            <h4><%= data.businesses[i].phone %></h4>
-            <p> "<%= data.businesses[i].snippet_text %>"</p>
+            <h3>
+              <a class="link" href=<%= business[i].url %>><%= business[i].name %></a>
+            </h3>
+            <img src=<%= business[i].image_url %> alt=<% business[i].name %>>
+            <h5>Rating: <%= business[i].rating %></h5>
+            <h5><%= business[i].display_phone %></h5>
+            <h5><%= business[i].location.display_address %></h5>
 
             <div class="form-group">
-             <button class='attendance btn btn-lg btn-secondary btn-block'><%= data.businesses[i].going.length %> Going Tonight</button>
+              <button class='attendance btn btn-lg btn-secondary btn-block'><%= business[i].going.length %> Going </button>
             </div>
 
-          <% if(currentUser && data.businesses[i].going.indexOf(currentUser.id) === -1){ %>
+          <% if(currentUser && business[i].going.indexOf(currentUser.id) === -1){ %>
            <div class="form-group">
-            <form method="post" action="/bars/<%= data.businesses[i].location.city %>/<%= data.businesses[i].id %>" >
+            <form method="post" action="/bars/<%= business[i].location.city %>/<%= business[i].id %>" >
               <button class='userAttendance btn btn-lg btn-secondary btn-block'> Are You Going?</button>
             </form>
           </div>
           <% } else if (currentUser){ %>
-
-            <form method="post" action="/bars/<%= data.businesses[i].location.city %>/<%= data.businesses[i].id %>?_method=Delete" >
+            <form method="post" action="/bars/<%= business[i].location.city %>/<%= business[i].id %>?_method=Delete" >
               <button class='btn btn-lg btn-secondary btn-block'type='submit'> Delete <span class='glyphicon glyphicon-remove'></span></button>
             </form>
           <% } %>

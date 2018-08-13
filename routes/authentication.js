@@ -39,8 +39,6 @@ var express               = require("express"),
  //render login form
  router.get("/login", function(req, res){
    res.render("login");
-    //res.render("login", {message: "ERROR, MESSED IT UP!!"});
-    //res.render("login", {message: req.flash("error")});
  });
 
  //login logic
