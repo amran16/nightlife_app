@@ -1,5 +1,5 @@
 # Night Life App
-##### Full Stack app that let you search bars using Yelp's API.
+##### Full Stack app that lets you search bars using Yelp's API.
 
 
 User Stories
