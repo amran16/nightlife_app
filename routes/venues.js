@@ -40,7 +40,7 @@ router.get('/bars/:place', function (req, res) {
                             if (!business[j].going) {
                                 business[j].going = [];
                             } else if (bars[i].YelpId === business[j].id) {
-                                business[j].going = bars[i].people;
+                                business[j].going = bars[i].person;
                             }
                         }
                     }
@@ -70,7 +70,7 @@ router.post('/bars/:place/:barId', isLoggedIn, function (req, res) {
         if (foundYelp === null) {
             YelpInfo.create({
                 YelpId: req.params.barId,
-                people: req.user._id
+                person: req.user._id
             }, function (err, savedYelp) {
                 if (err) {
                     console.log(err);
@@ -82,7 +82,7 @@ router.post('/bars/:place/:barId', isLoggedIn, function (req, res) {
         } else {
             //console.log('foundYelp from post before', foundYelp);
             //console.log(req.user);
-            foundYelp.people.push(req.user._id);
+            foundYelp.person.push(req.user._id);
             foundYelp.save();
             //console.log('foundYelp from post after', foundYelp);
             res.redirect('/bars/' + req.params.place);
@@ -96,7 +96,7 @@ router.delete('/bars/:place/:barId', isLoggedIn, function (req, res, next) {
         if (err) return next(err);
         if (!err) {
             //console.log(req.user._id);
-            foundYelp.people.splice((foundYelp.people.indexOf(req.user._id)), 1);
+            foundYelp.person.splice((foundYelp.person.indexOf(req.user._id)), 1);
             foundYelp.save();
             //console.log(foundYelp);
             res.redirect('/bars/' + req.params.place);
