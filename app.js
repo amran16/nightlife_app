@@ -21,10 +21,9 @@ const PORT = process.env.PORT || 7000;
 const authentication = require('./routes/authentication');
 const bars           = require('./routes/venues');
 
-
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.MONGOLAB_CHARCOAL_URI || 'mongodb://localhost/nightlife', {
-  keepAlive: true
+  useNewUrlParser: true
 });
 
 app.set('view engine', 'ejs');
